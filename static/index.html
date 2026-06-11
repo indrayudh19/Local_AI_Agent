@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus AI Chat</title>
+    <meta name="description" content="A premium chat interface powered by AI — RAG and LLM modes">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class='bx bxl-sketch'></i>
+                    <h2 class="sidebar-text">Nexus AI</h2>
+                </div>
+                <button id="new-chat-btn" class="primary-btn" title="New Chat">
+                    <i class='bx bx-plus'></i>
+                    <span class="sidebar-text">New Chat</span>
+                </button>
+            </div>
+            <div class="sidebar-content">
+                <div class="nav-links">
+                    <button class="nav-btn" id="email-btn" title="Email">
+                        <i class='bx bx-envelope'></i>
+                        <span class="sidebar-text">Email</span>
+                    </button>
+                    <button class="nav-btn" id="calendar-btn" title="Calendar">
+                        <i class='bx bx-calendar'></i>
+                        <span class="sidebar-text">Calendar</span>
+                    </button>
+                    <button class="nav-btn" id="deep-research-btn" title="Deep Research">
+                        <i class='bx bx-search-alt-2'></i>
+                        <span class="sidebar-text">Deep Research</span>
+                    </button>
+                    <button class="nav-btn" id="library-btn" title="Library">
+                        <i class='bx bx-library'></i>
+                        <span class="sidebar-text">Library</span>
+                    </button>
+                    <button class="nav-btn" id="theme-btn" title="Themes">
+                        <i class='bx bx-palette'></i>
+                        <span class="sidebar-text">Themes</span>
+                    </button>
+                </div>
+                <div id="docs-section" class="docs-section" style="display: none;">
+                    <p class="section-title sidebar-text">Library (Uploaded Docs)</p>
+                    <ul id="docs-list" class="chat-list docs-list">
+                        <!-- Document items injected here via JS -->
+                    </ul>
+                </div>
+                <p class="section-title sidebar-text">Previous Chats</p>
+                <ul id="chat-list" class="chat-list">
+                    <!-- Chat items will be injected here via JS -->
+                </ul>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar"><i class='bx bxs-user'></i></div>
+                    <span class="sidebar-text">Guest User</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Toggle Button -->
+        <button id="sidebar-toggle" class="sidebar-toggle" title="Toggle Sidebar">
+            <i class='bx bx-menu'></i>
+        </button>
+
+        <!-- Main Chat Area -->
+        <main class="chat-area">
+            <header class="chat-header">
+                <h3 id="current-chat-title">New Conversation</h3>
+                <div class="header-actions">
+                    <button class="icon-btn" id="delete-chat-btn" title="Delete current chat" style="display: none;">
+                        <i class='bx bx-trash'></i>
+                    </button>
+                </div>
+            </header>
+
+            <div id="messages-container" class="messages-container">
+                <!-- Welcome Screen -->
+                <div class="welcome-screen" id="welcome-screen">
+                    <div class="welcome-icon"><i class='bx bx-bot'></i></div>
+                    <h1>How can I help you today?</h1>
+                    <p id="welcome-subtitle">Upload a PDF document and ask questions about its content.</p>
+                </div>
+                <!-- Dynamic messages injected here -->
+            </div>
+
+            <div class="input-area">
+                <!-- Mode Toggle -->
+                <div class="mode-toggle-container" id="mode-toggle-container">
+                    <div class="mode-toggle" id="mode-toggle">
+                        <button class="mode-btn active" data-mode="rag" id="mode-btn-rag">
+                            <i class='bx bx-search-alt'></i>
+                            <span>RAG Mode</span>
+                        </button>
+                        <button class="mode-btn" data-mode="llm" id="mode-btn-llm">
+                            <i class='bx bx-brain'></i>
+                            <span>LLM Mode</span>
+                        </button>
+                        <div class="mode-slider" id="mode-slider"></div>
+                    </div>
+                </div>
+
+                <!-- Upload PDF (RAG mode only) -->
+                <div class="rag-upload-area" id="rag-upload-area">
+                    <label for="pdf-upload" class="upload-inline-btn" id="upload-label">
+                        <i class='bx bx-upload'></i>
+                        <span>Upload PDF</span>
+                    </label>
+                    <input type="file" id="pdf-upload" accept=".pdf" style="display: none;">
+                    <div id="upload-status" class="upload-status" style="display: none;"></div>
+                </div>
+
+                <form id="chat-form" class="chat-form">
+                    <div class="input-wrapper">
+                        <textarea id="prompt-input" placeholder="Message Nexus AI..." rows="1"></textarea>
+                        <button type="submit" id="send-btn" class="send-btn" disabled>
+                            <i class='bx bx-up-arrow-alt'></i>
+                        </button>
+                    </div>
+                    <div class="disclaimer" id="disclaimer-text">Answers are extracted from your uploaded documents using NLP. No LLM is used.</div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

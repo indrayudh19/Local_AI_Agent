@@ -1,0 +1,9 @@
+flask==3.1.1
+flask-cors==5.0.1
+sentence-transformers==3.4.1
+faiss-cpu==1.9.0.post1
+PyMuPDF==1.25.5
+spacy==3.8.7
+scikit-learn==1.6.1
+numpy==2.2.6
+requests==2.32.3
