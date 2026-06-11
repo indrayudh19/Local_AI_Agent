@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 from rag.pipeline import RAGPipeline
 from rag.config import UPLOADS_DIR
 from llm.orchestrator import LLMOrchestrator
+from deepresearch_agent.deep_research import DeepResearchAgent
 
 # ──────────────────────────────────────────────
 # App Setup
@@ -25,6 +26,8 @@ print("[App] Initializing RAG pipeline...")
 pipeline = RAGPipeline()
 print("[App] Initializing LLM orchestrator...")
 llm_orchestrator = LLMOrchestrator()
+print("[App] Initializing Deep Research agent...")
+deep_research_agent = DeepResearchAgent()
 print("[App] Server ready.")
 
 
@@ -220,6 +223,36 @@ def llm_models():
         { "models": [...], "status": "ok" }
     """
     return jsonify(llm_orchestrator.list_models())
+
+
+# ──────────────────────────────────────────────
+# Deep Research API
+# ──────────────────────────────────────────────
+
+@app.route("/api/deep_research", methods=["POST"])
+def deep_research():
+    """
+    Handle a deep research query.
+
+    Request JSON:
+        { "message": "Research the latest advancements in solid state batteries" }
+    """
+    data = request.get_json()
+    if not data or "message" not in data:
+        return jsonify({"error": "Missing 'message' field"}), 400
+
+    message = data["message"].strip()
+    if not message:
+        return jsonify({"error": "Empty message"}), 400
+
+    try:
+        result = deep_research_agent.research(message)
+        # To distinguish modes on the frontend
+        result["mode"] = "deep_research"
+        return jsonify(result)
+    except Exception as e:
+        print(f"[App] Deep Research error: {e}")
+        return jsonify({"error": f"Deep Research error: {str(e)}"}), 500
 
 
 # ──────────────────────────────────────────────

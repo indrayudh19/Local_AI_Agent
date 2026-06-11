@@ -93,7 +93,22 @@
                 <!-- Dynamic messages injected here -->
             </div>
 
-            <div class="input-area">
+            <!-- Deep Research Screen -->
+            <div id="deep-research-screen" class="deep-research-screen hidden">
+                <h1 class="dr-title">Deep Research</h1>
+                <form id="dr-form" class="dr-form">
+                    <div class="dr-input-wrapper">
+                        <i class='bx bx-search-alt-2'></i>
+                        <input type="text" id="dr-prompt-input" placeholder="What do you want to research?" autocomplete="off">
+                        <button type="submit" id="dr-send-btn" class="dr-send-btn" disabled>
+                            <i class='bx bx-right-arrow-alt'></i>
+                        </button>
+                    </div>
+                </form>
+                <div id="dr-results" class="dr-results"></div>
+            </div>
+
+            <div class="input-area" id="main-input-area">
                 <!-- Mode Toggle -->
                 <div class="mode-toggle-container" id="mode-toggle-container">
                     <div class="mode-toggle" id="mode-toggle">

@@ -903,6 +903,114 @@ textarea::placeholder {
 }
 
 /* ─────────────────────────────────────────
+   Hidden Utility
+───────────────────────────────────────── */
+.hidden {
+    display: none !important;
+}
+
+/* ─────────────────────────────────────────
+   Deep Research Screen
+───────────────────────────────────────── */
+.deep-research-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px 24px;
+    overflow-y: auto;
+    gap: 24px;
+}
+
+.dr-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    letter-spacing: -0.02em;
+}
+
+.dr-form {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    justify-content: center;
+}
+
+.dr-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--sidebar-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 10px 14px;
+    width: 100%;
+    transition: var(--transition-fast);
+    box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.25);
+}
+
+.dr-input-wrapper:focus-within {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 1px var(--accent-color), 0 8px 20px -4px rgba(0, 0, 0, 0.25);
+}
+
+.dr-input-wrapper i {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.dr-input-wrapper input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.95rem;
+    padding: 6px 4px;
+}
+
+.dr-input-wrapper input::placeholder {
+    color: var(--text-secondary);
+}
+
+.dr-send-btn {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: var(--transition-fast);
+}
+
+.dr-send-btn:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+}
+
+.dr-send-btn:disabled {
+    background-color: var(--panel-border);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+.dr-results {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* ─────────────────────────────────────────
    LLM Mode Theme Adjustments
 ───────────────────────────────────────── */
 body.llm-mode .welcome-icon {

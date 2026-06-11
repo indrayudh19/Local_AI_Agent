@@ -32,6 +32,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Nav elements
     const libraryBtn = document.getElementById('library-btn');
     const themeBtn = document.getElementById('theme-btn');
+    const deepResearchBtn = document.getElementById('deep-research-btn');
+
+    // Deep Research Elements
+    const deepResearchScreen = document.getElementById('deep-research-screen');
+    const mainInputArea = document.getElementById('main-input-area');
+    const drForm = document.getElementById('dr-form');
+    const drPromptInput = document.getElementById('dr-prompt-input');
+    const drSendBtn = document.getElementById('dr-send-btn');
+    const drResults = document.getElementById('dr-results');
 
     // ──────────────────────────────────────────────
     // API Base URL
@@ -87,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (libraryBtn) libraryBtn.addEventListener('click', () => {
             docsSection.style.display = docsSection.style.display === 'none' ? 'block' : 'none';
         });
+        if (deepResearchBtn) deepResearchBtn.addEventListener('click', toggleDeepResearchMode);
 
         promptInput.addEventListener('input', () => {
             // Auto resize textarea
@@ -108,6 +118,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // PDF Upload
         pdfUpload.addEventListener('change', handleFileUpload);
+
+        // Deep Research
+        drPromptInput.addEventListener('input', () => {
+            drSendBtn.disabled = drPromptInput.value.trim() === '';
+        });
+        drForm.addEventListener('submit', handleDeepResearchSubmit);
     }
 
     // ──────────────────────────────────────────────
@@ -186,6 +202,97 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.setAttribute('data-theme', 'turquoise');
         } else {
             document.documentElement.removeAttribute('data-theme');
+        }
+    }
+
+    // ──────────────────────────────────────────────
+    // Deep Research
+    // ──────────────────────────────────────────────
+
+    function toggleDeepResearchMode() {
+        const isHidden = deepResearchScreen.classList.contains('hidden');
+        if (isHidden) {
+            // Show DR screen, hide normal chat
+            deepResearchScreen.classList.remove('hidden');
+            messagesContainer.style.display = 'none';
+            mainInputArea.style.display = 'none';
+            currentChatTitle.textContent = 'Deep Research';
+            deleteChatBtn.style.display = 'none';
+        } else {
+            // Hide DR screen, restore normal chat
+            deepResearchScreen.classList.add('hidden');
+            messagesContainer.style.display = 'flex';
+            mainInputArea.style.display = 'flex';
+            
+            // Restore chat title based on current session
+            const session = sessions.find(s => s.id === currentSessionId);
+            if (session) {
+                currentChatTitle.textContent = session.title;
+                deleteChatBtn.style.display = 'block';
+            } else {
+                currentChatTitle.textContent = 'New Conversation';
+                deleteChatBtn.style.display = 'none';
+            }
+        }
+    }
+
+    async function handleDeepResearchSubmit(e) {
+        e.preventDefault();
+        const content = drPromptInput.value.trim();
+        if (!content) return;
+
+        // Reset input
+        drPromptInput.value = '';
+        drSendBtn.disabled = true;
+
+        // Show thinking state in results
+        drResults.innerHTML = `
+            <div class="message-wrapper bot">
+                <div class="message-avatar"><i class='bx bx-bot'></i></div>
+                <div class="message-content">Researching '${escapeHTML(content)}'... <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>
+            </div>
+        `;
+
+        try {
+            const response = await fetch(`${API_BASE}/api/deep_research`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: content })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+
+            // Build sources HTML
+            let sourcesHTML = '';
+            if (data.sources && data.sources.length > 0) {
+                const tags = data.sources.map(s => 
+                    `<a href="${escapeHTML(s.url)}" target="_blank" class="source-tag" style="text-decoration:none; color:inherit;"><i class='bx bx-link-external'></i>${escapeHTML(s.file)}</a>`
+                ).join('');
+                sourcesHTML = `<div class="message-sources" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">${tags}</div>`;
+            }
+
+            drResults.innerHTML = `
+                <div class="message-wrapper bot" style="animation: none;">
+                    <div class="message-avatar"><i class='bx bx-bot'></i></div>
+                    <div class="message-content">
+                        ${escapeHTML(data.answer).replace(/\n/g, '<br>')}
+                        ${sourcesHTML}
+                    </div>
+                </div>
+            `;
+        } catch (error) {
+            console.error('Deep research error:', error);
+            drResults.innerHTML = `
+                <div class="message-wrapper bot">
+                    <div class="message-avatar"><i class='bx bx-error'></i></div>
+                    <div class="message-content" style="color: #ef4444;">Error: ${escapeHTML(error.message)}</div>
+                </div>
+            `;
         }
     }
 
